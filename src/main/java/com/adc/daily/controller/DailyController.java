@@ -16,12 +16,17 @@ public class DailyController {
     public String page(@PathVariable String page){
         return  page;
     }
+    @RequestMapping("/")
+    public String showPage(){
+        return  "index";
+    }
     @GetMapping("/getDailyList")
+    @ResponseBody
     public List<DailyEO> getDailyList(){
         try{
-            List<DailyEO> dailyEOS = dailyService.getDailyList();
+           /* List<DailyEO> dailyEOS = dailyService.getDailyList();
             DailyEO dailyEO = dailyEOS.get(0);
-            dailyService.saveDaily(dailyEO);
+            dailyService.saveDaily(dailyEO);*/
             return dailyService.getDailyList();
         }catch (Exception e){
             e.printStackTrace();
@@ -29,6 +34,7 @@ public class DailyController {
         }
     }
     @PutMapping("/saveDaily")
+    @ResponseBody
     public String  saveDaily(@RequestBody DailyEO dailyEO){
         try{
             dailyService.saveDaily(dailyEO);
