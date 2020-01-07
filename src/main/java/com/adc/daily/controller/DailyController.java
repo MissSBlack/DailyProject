@@ -33,7 +33,7 @@ public class DailyController {
             return null;
         }
     }
-    @PutMapping("/saveDaily")
+    @PostMapping("/saveDaily")
     @ResponseBody
     public String  saveDaily(@RequestBody DailyEO dailyEO){
         try{

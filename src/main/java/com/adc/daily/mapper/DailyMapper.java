@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Select;
 import java.util.List;
 @Mapper
 public interface DailyMapper {
-    @Select("select * from daily_project ")
+    @Select("select * from daily_project ORDER BY daily_project.DAILY_DATE DESC")
     List<DailyEO> getDailyList();
     @Insert("insert into daily_project (id,DAILY_DATE,PROJECT,FIRST_MODULE,SECOND_MODULE,PROBLEM_TYPE,PRIORITY,CONTENT,HANDLER,HANDLE_TIME,IS_IN_PLAN) values(#{id},#{dailyDate},#{project},#{firstModule},#{secondModule},#{problemType},#{priority},#{content},#{handler},#{handleTime},#{isInPlan})")
     void saveDaily(DailyEO dailyEO);
