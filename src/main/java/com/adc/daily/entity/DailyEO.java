@@ -12,7 +12,7 @@ public class DailyEO {
     private String handler;
     private String handleTime;
     private String isInPlan;
-
+    private String del;//删除标记：0：有效；1删除
     public String getId() {
         return id;
     }
@@ -99,5 +99,13 @@ public class DailyEO {
 
     public void setIsInPlan(String isInPlan) {
         this.isInPlan = isInPlan;
+    }
+
+    public String getDel() {
+        return del;
+    }
+
+    public void setDel(String del) {
+        this.del = del;
     }
 }

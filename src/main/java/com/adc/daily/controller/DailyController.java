@@ -44,4 +44,38 @@ public class DailyController {
             return "保存失败";
         }
     }
+    @PostMapping("/updateDaily")
+    @ResponseBody
+    public String updateDaily(@RequestBody DailyEO dailyEO){
+        try{
+            dailyService.updateDaily(dailyEO);
+            return "编辑成功！";
+        }catch (Exception e){
+            e.printStackTrace();
+            return "编辑失败";
+        }
+    }
+    @PostMapping("/delDaily")
+    @ResponseBody
+    public String delDaily(@RequestBody DailyEO dailyEO){
+        try{
+            String id = dailyEO.getId();
+            dailyService.delDaily(id);
+            return "删除成功！";
+        }catch (Exception e){
+            e.printStackTrace();
+            return "删除失败";
+        }
+    }
+    @PostMapping("/copyDaily")
+    @ResponseBody
+    public String copyDaily(@RequestBody DailyEO dailyEO){
+        try{
+            dailyService.saveDaily(dailyEO);
+            return "复制成功！";
+        }catch (Exception e){
+            e.printStackTrace();
+            return "复制失败";
+        }
+    }
 }

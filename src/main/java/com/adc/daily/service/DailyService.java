@@ -19,6 +19,14 @@ public class DailyService {
 
     public void saveDaily(DailyEO dailyEO) {
         dailyEO.setId(UUID.randomUUID().toString());
+        dailyEO.setDel("0");
         dailyMapper.saveDaily(dailyEO);
+    }
+    public void updateDaily(DailyEO dailyEO){
+        dailyEO.setDel("0");
+        dailyMapper.updateDaily(dailyEO);
+    }
+    public void delDaily(String id){
+        dailyMapper.delDaily(id);
     }
 }

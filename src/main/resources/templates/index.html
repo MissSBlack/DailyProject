@@ -17,6 +17,12 @@
 		.alertceng span.title{
 			margin-right: 10px;
 		}
+        #table thead tr th:nth-child(1){
+            display: none;
+        }
+        #table tbody tr td:nth-child(1){
+            display: none;
+        }
 	</style>
 </head>
 <body>
@@ -32,6 +38,7 @@
 			<table id="table" class="reponsetable" ></table>
 			<script type="text/html" id="editer">
 				<a class="layui-btn layui-btn-xs" onclick="edittr(this)">编辑</a>
+                <a class="layui-btn layui-btn-xs" onclick="copy(this)">复制</a>
 				<a class="layui-btn layui-btn-xs" onclick="deletetr(this)">删除</a>
 				<!--<a class="layui-btn layui-btn-xs" onclick="uptr(this)">上移</a>
 				<a class="layui-btn layui-btn-xs" onclick="downtr(this)">下移</a>-->
@@ -87,6 +94,7 @@
                     "operation": "editer",
                     "type":"numbers",
                     "colum": [
+                        {"field": "id","title": "id"},
                         {"field": "dailyDate","title": "日期"},
                         {"field": "project","title": "所属项目"},
                         {"field": "firstModule","title": "一级模块"},
@@ -114,16 +122,16 @@
 		  content: $('#editcontent'),
 		  btn:["保存","关闭"],
 		  btn1:function(index,layero){
-			  var dailyDate=$("#dailyDate").val();
-			  var project=$("#project").val();
-			  var firstModule=$("#firstModule").val();
-			  var secondModule=$("#secondModule").val();
-			  var problemType=$("#problemType").val();
-			  var priority=$("#priority").val();
-			  var content=$("#content").val();
-			  var handler=$("#handler").val();
-			  var handleTime=$("#handleTime").val();
-			  var isInPlan=$("#isInPlan").val();
+			  var dailyDate = $("#dailyDate").val();
+			  var project = $("#project").val();
+			  var firstModule = $("#firstModule").val();
+			  var secondModule = $("#secondModule").val();
+			  var problemType = $("#problemType").val();
+			  var priority = $("#priority").val();
+			  var content = $("#content").val();
+			  var handler = $("#handler").val();
+			  var handleTime = $("#handleTime").val();
+			  var isInPlan = $("#isInPlan").val();
 			  var obj = {
 				"dailyDate":dailyDate,
 			  	"project": project,
@@ -146,7 +154,6 @@
                       alert(res);
                   }
               })
-			  //reponse.editsavetr(obj, "table");
 			  layer.close(index);
 		  },btn2:function(index,layero){
 			  layer.close(index);
@@ -196,13 +203,19 @@
     //     })
 	// }
 	function edittr(a, e) {
-
 		var tr = $(a).parent().parent();
 		reponse.resiverowdata(tr, "table");
-		var rowdata=$("#table").data("rowdata");
-		//alert(JSON.stringify(rowdata));
-		//页面层-佟丽娅
-		
+		var rowdata = $("#table").data("rowdata");
+        $("#dailyDate").val(rowdata.dailyDate);
+        $("#project").val(rowdata.project);
+        $("#firstModule").val(rowdata.firstModule);
+        $("#secondModule").val(rowdata.secondModule);
+        $("#problemType").val(rowdata.problemType);
+        $("#priority").val(rowdata.priority);
+        $("#content").val(rowdata.content);
+        $("#handler").val(rowdata.handler);
+        $("#handleTime").val(rowdata.handleTime);
+        $("#isInPlan").val(rowdata.isInPlan);
 		layer.open({
 		  type: 1,
 		  title: '编辑日志',
@@ -213,17 +226,19 @@
 		  content: $('#editcontent'),
 		  btn:["保存","关闭"],
 		  btn1:function(index,layero){
-			  var dailyDate=$("#dailyDate").val();
-			  var project=$("#project").val();
-			  var firstModule=$("#firstModule").val();
-			  var secondModule=$("#secondModule").val();
-			  var problemType=$("#problemType").val();
-			  var priority=$("#priority").val();
-			  var content=$("#content").val();
-			  var handler=$("#handler").val();
-			  var handleTime=$("#handleTime").val();
-			  var isInPlan=$("#isInPlan").val();
+		      var id = rowdata.id;
+			  var dailyDate = $("#dailyDate").val();
+			  var project = $("#project").val();
+			  var firstModule = $("#firstModule").val();
+			  var secondModule = $("#secondModule").val();
+			  var problemType = $("#problemType").val();
+			  var priority = $("#priority").val();
+			  var content = $("#content").val();
+			  var handler = $("#handler").val();
+			  var handleTime = $("#handleTime").val();
+			  var isInPlan = $("#isInPlan").val();
 			  var obj = {
+			      "id":id,
 				"dailyDate":dailyDate,
 			  	"project": project,
 			  	"firstModule": firstModule,
@@ -236,6 +251,15 @@
 				"isInPlan":isInPlan
 			  };
 			  reponse.editsavetr(obj, "table");
+              $.ajax({
+                  url: 'updateDaily',
+                  type: 'post',
+                  data: JSON.stringify(obj),
+                  contentType: 'application/json;charset=UTF-8',
+                  success: function(res){
+                      alert(res);
+                  }
+              })
 			  layer.close(index);
 		  },btn2:function(index,layero){
 			  layer.close(index);
@@ -244,8 +268,85 @@
 	}
 	function deletetr(a, e) {
 		var tr = $(a).parent().parent();
+        reponse.resiverowdata(tr, "table");
+        var rowdata = $("#table").data("rowdata");
 		reponse.deletetr(tr, e);
+		var id = rowdata.id;
+        var obj = {
+            "id":id
+        }
+        $.ajax({
+            url: 'delDaily',
+            type: 'post',
+            data: JSON.stringify(obj),
+            contentType: 'application/json;charset=UTF-8',
+            success: function(res){
+                alert(res);
+            }
+        })
 	}
+    function copy(a, e) {
+        var tr = $(a).parent().parent();
+        reponse.resiverowdata(tr, "table");
+        var rowdata = $("#table").data("rowdata");
+        $("#dailyDate").val(rowdata.dailyDate);
+        $("#project").val(rowdata.project);
+        $("#firstModule").val(rowdata.firstModule);
+        $("#secondModule").val(rowdata.secondModule);
+        $("#problemType").val(rowdata.problemType);
+        $("#priority").val(rowdata.priority);
+        $("#content").val(rowdata.content);
+        $("#handler").val(rowdata.handler);
+        $("#handleTime").val(rowdata.handleTime);
+        $("#isInPlan").val(rowdata.isInPlan);
+        layer.open({
+            type: 1,
+            title: '复制日志',
+            closeBtn: 1,
+            area: '516px',
+            skin: '#fff', //没有背景色
+            shadeClose: true,
+            content: $('#editcontent'),
+            btn:["保存","关闭"],
+            btn1:function(index,layero){
+                var dailyDate = $("#dailyDate").val();
+                var project = $("#project").val();
+                var firstModule = $("#firstModule").val();
+                var secondModule = $("#secondModule").val();
+                var problemType = $("#problemType").val();
+                var priority = $("#priority").val();
+                var content = $("#content").val();
+                var handler = $("#handler").val();
+                var handleTime = $("#handleTime").val();
+                var isInPlan = $("#isInPlan").val();
+                var obj = {
+                    "dailyDate":dailyDate,
+                    "project": project,
+                    "firstModule": firstModule,
+                    "secondModule": secondModule,
+                    "problemType": problemType,
+                    "priority":priority,
+                    "content":content,
+                    "handler":handler,
+                    "handleTime":handleTime,
+                    "isInPlan":isInPlan
+                };
+                reponse.addtr(obj, "table");
+                $.ajax({
+                    url: 'copyDaily',
+                    type: 'post',
+                    data: JSON.stringify(obj),
+                    contentType: 'application/json;charset=UTF-8',
+                    success: function(res){
+                        alert(res);
+                    }
+                })
+                layer.close(index);
+            },btn2:function(index,layero){
+                layer.close(index);
+            }
+        });
+    }
 	function coldata(){
 		var pp=reponse.Columndata("Name","table");
 		alert(pp);
